@@ -7,7 +7,14 @@ import { Gif, SearchGifsResponse } from '../interface/gif.interface';
 })
 export class GifsService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient) { 
+    if (localStorage.getItem('historial')) {
+      this._historial = JSON.parse(localStorage.getItem('historial')!);  
+    }
+    if (localStorage.getItem('resultados')) {
+      this.resultados = JSON.parse(localStorage.getItem('resultados')!);  
+    }
+  }
 
   private apiKey:string = 'vcPlIxJUzeXEJlwAVznCaQev6z9rwFFs';
   private urlBase:string = 'https://api.giphy.com/v1/gifs/search?';
@@ -23,11 +30,13 @@ export class GifsService {
     if (!this._historial.includes(data)) {
       this._historial.unshift(data);
       this._historial = this._historial.splice(0,10);
+      localStorage.setItem('historial', JSON.stringify(this._historial));
     }
     this.http.get<SearchGifsResponse>(`${this.urlBase}api_key=${this.apiKey}&q=${data}&limit=10`)
       .subscribe(( resp ) => {
         //console.log(resp.data);
         this.resultados = resp.data;
+        localStorage.setItem('resultados', JSON.stringify(this.resultados))
       })  
 
   }  
