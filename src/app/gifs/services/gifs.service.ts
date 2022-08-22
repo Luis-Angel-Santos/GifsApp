@@ -17,7 +17,7 @@ export class GifsService {
   }
 
   private apiKey:string = 'vcPlIxJUzeXEJlwAVznCaQev6z9rwFFs';
-  private urlBase:string = 'https://api.giphy.com/v1/gifs/search?';
+  private urlBase:string = 'https://api.giphy.com/v1/gifs';
   private _historial: string[] = [];
   public resultados:Gif[] = [];
 
@@ -32,7 +32,7 @@ export class GifsService {
       this._historial = this._historial.splice(0,10);
       localStorage.setItem('historial', JSON.stringify(this._historial));
     }
-    this.http.get<SearchGifsResponse>(`${this.urlBase}api_key=${this.apiKey}&q=${data}&limit=10`)
+    this.http.get<SearchGifsResponse>(`${this.urlBase}/search?api_key=${this.apiKey}&q=${data}&limit=10`)
       .subscribe(( resp ) => {
         //console.log(resp.data);
         this.resultados = resp.data;
